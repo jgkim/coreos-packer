@@ -5,6 +5,9 @@
 		"checksum": "b08e074e7a0445772c81068989b1645b",
 
 		"oem_vagrant_version": "0.0.1-r12",
+
+		"atlas_username": "",
+		"atlas_token": ""
 	},
 
 	"builders": [{
@@ -73,6 +76,13 @@
 				"oem/vagrant/box/configure_networks.rb",
 				"oem/vagrant/box/base_mac.rb"
 			]
+		}, {
+			"only": ["vagrant-parallels"],
+			"type": "vagrant-cloud",
+			"access_token": "{{user `atlas_token`}}",
+			"box_tag": "{{user `atlas_username`}}/coreos-{{user `channel`}}",
+			"version": "{{user `version`}}",
+			"version_description": "**CoreOS [{{user `version`}}](https://coreos.com/releases/#{{user `version`}})** *{{user `channel`}}*"
 		}]
 	]
 }

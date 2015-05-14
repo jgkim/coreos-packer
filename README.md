@@ -48,4 +48,7 @@ This is a [packer](https://packer.io/) template for [CoreOS](http://parallels.gi
 
 ## Known Issues
 
-- Building images fails from time to time due to [coreos/bugs#152](https://github.com/coreos/bugs/issues/152)
+- Building images fails from time to time due to [coreos/bugs#152](https://github.com/coreos/bugs/issues/152).
+- [Vagrant Cloud Post-Processor](https://packer.io/docs/post-processors/vagrant-cloud.html) has some [bugs](https://github.com/mitchellh/packer/issues/1735) in the latest release (0.7.5), but works properly with [the recent code](https://github.com/mitchellh/packer).
+- The [version description](https://github.com/mitchellh/packer/pull/2110) option in Vagrant Cloud Post-Processor is not interpolated with template variables.
+- [Atlas Post-Processor](https://packer.io/docs/post-processors/atlas.html) also works [only](https://github.com/mitchellh/packer/issues/1815) with the [development](https://github.com/mitchellh/packer) version of Packer, and it does not use the [interpolation](https://github.com/mitchellh/packer/issues/2048) in metadata blocks.
