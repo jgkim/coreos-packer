@@ -21,9 +21,10 @@ This is a [packer](https://packer.io/) template for [CoreOS](http://parallels.gi
     $ brew cask install parallels-desktop
     $ brew cask install parallels-virtualization-sdk
 
-#### Install [Vagrant](http://www.vagrantup.com/downloads)
+#### Install [Vagrant](http://www.vagrantup.com/downloads) & [Parallels Provider](http://parallels.github.io/vagrant-parallels/)
 
     $ brew cask install vagrant
+    $ vagrant plugin install vagrant-parallels
 
 #### Install [Packer](https://packer.io/downloads.html)
 
