@@ -34,11 +34,11 @@ This is a [packer](https://packer.io/) template for [CoreOS](http://parallels.gi
 
     $ git clone https://github.com/jgkim/coreos-packer.git
     $ cd coreos-packer
-    $ packer build -var 'channel=stable' -var 'version=633.1.0' -var 'checksum=b08e074e7a0445772c81068989b1645b' coreos.json
+    $ packer build -var 'channel=stable' -var 'version=647.2.0' -var 'checksum=adef94fabf7c3573b37b35fc7cf7ff2c' coreos.json
 
 ### 3. Add the Box to Vagrant
 
-    $ vagrant box add --force --provider=parallels -name {name}/coreos-stable builds/stable/633.1.0/coreos_production_vagrant_parallels.box
+    $ vagrant box add --force --provider=parallels -name {name}/coreos-stable builds/stable/647.2.0/coreos_production_vagrant_parallels.box
 
 ### 4. Vagrant Up
 
@@ -50,5 +50,6 @@ This is a [packer](https://packer.io/) template for [CoreOS](http://parallels.gi
 
 - Building images fails from time to time due to [coreos/bugs#152](https://github.com/coreos/bugs/issues/152).
 - [Vagrant Cloud Post-Processor](https://packer.io/docs/post-processors/vagrant-cloud.html) has some [bugs](https://github.com/mitchellh/packer/issues/1735) in the latest release (0.7.5), but works properly with [the recent code](https://github.com/mitchellh/packer).
-- The [version description](https://github.com/mitchellh/packer/pull/2110) option in Vagrant Cloud Post-Processor is not interpolated with template variables.
-- [Atlas Post-Processor](https://packer.io/docs/post-processors/atlas.html) also works [only](https://github.com/mitchellh/packer/issues/1815) with the [development](https://github.com/mitchellh/packer) version of Packer, and it does not use the [interpolation](https://github.com/mitchellh/packer/issues/2048) in metadata blocks.
+- There are [bugs](https://github.com/mitchellh/packer/pull/2161) regarding use of `only` or `except` configurations in post-processors.
+- ~~The [version description](https://github.com/mitchellh/packer/pull/2110) option in Vagrant Cloud Post-Processor is not interpolated with template variables.~~
+- ~~[Atlas Post-Processor](https://packer.io/docs/post-processors/atlas.html) also works [only](https://github.com/mitchellh/packer/issues/1815) with the [development](https://github.com/mitchellh/packer) version of Packer, and it does not use the [interpolation](https://github.com/mitchellh/packer/issues/2048) in metadata blocks.~~

@@ -1,88 +1,88 @@
 {
-	"variables": {
-		"channel": "stable",
-		"version": "633.1.0",
-		"checksum": "b08e074e7a0445772c81068989b1645b",
+  "variables": {
+    "channel": "stable",
+    "version": "647.2.0",
+    "checksum": "adef94fabf7c3573b37b35fc7cf7ff2c",
 
-		"oem_vagrant_version": "0.0.1-r12",
+    "oem_vagrant_version": "0.0.1-r12",
 
-		"atlas_username": "",
-		"atlas_token": ""
-	},
+    "atlas_username": "",
+    "atlas_token": ""
+  },
 
-	"builders": [{
-		"name": "vagrant-parallels",
-		"type": "parallels-iso",
-		"vm_name": "coreos-{{user `channel`}}",
+  "builders": [{
+    "name": "vagrant-parallels",
+    "type": "parallels-iso",
+    "vm_name": "coreos-{{user `channel`}}",
 
-		"disk_size": "20480",
-		"prlctl": [
-			[ "set", "{{.Name}}", "--memsize", "1024" ],
-			[ "set", "{{.Name}}", "--cpus", "1" ]
-		],
-		"guest_os_type": "linux-2.6",
-		"parallels_tools_mode": "disable",
+    "disk_size": "20480",
+    "prlctl": [
+      [ "set", "{{.Name}}", "--memsize", "1024" ],
+      [ "set", "{{.Name}}", "--cpus", "1" ]
+    ],
+    "guest_os_type": "linux-2.6",
+    "parallels_tools_mode": "disable",
 
-		"iso_url": "http://{{user `channel`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
-		"iso_checksum": "{{user `checksum`}}",
-		"iso_checksum_type": "md5",
+    "iso_url": "http://{{user `channel`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
+    "iso_checksum": "{{user `checksum`}}",
+    "iso_checksum_type": "md5",
 
-		"http_directory": "keys/vagrant",
+    "http_directory": "keys/vagrant",
 
-		"boot_command": [
-			"wget -q http://{{ .HTTPIP }}:{{ .HTTPPort }}/vagrant.pub -O ~/.ssh/authorized_keys<enter>",
-			"chmod 600 ~/.ssh/authorized_keys<enter>",
-			"sudo systemctl start sshd.service<enter>"
-		],
+    "boot_command": [
+      "wget -q http://{{ .HTTPIP }}:{{ .HTTPPort }}/vagrant.pub -O ~/.ssh/authorized_keys<enter>",
+      "chmod 600 ~/.ssh/authorized_keys<enter>",
+      "sudo systemctl start sshd.service<enter>"
+    ],
 
-		"ssh_username": "core",
-		"ssh_key_path": "keys/vagrant/vagrant",
-		"ssh_wait_timeout": "30s",
+    "ssh_username": "core",
+    "ssh_key_path": "keys/vagrant/vagrant",
+    "ssh_wait_timeout": "30s",
 
-		"shutdown_command": "sudo shutdown now",
-		"output_directory": "builds/coreos_production_vagrant_parallels"
-	}],
+    "shutdown_command": "sudo shutdown now",
+    "output_directory": "builds/coreos_production_vagrant_parallels"
+  }],
 
-	"provisioners": [{
-		"only": ["vagrant-parallels"],
-		"type": "file",
-		"source": "oem/vagrant",
-		"destination": "/tmp"
-	},{
-		"only": ["vagrant-parallels"],
-		"type": "shell",
-		"inline": [
-			"set -e",
-			"sudo coreos-install -d /dev/sda -C {{user `channel`}} -V {{user `version`}} > /dev/null",
-			"sleep 1",
-			"sudo mount /dev/sda6 /mnt",
-			"cat /tmp/vagrant/cloud-config.yml | sed 's/@@OEM_VERSION_ID@@/{{user `oem_vagrant_version`}}/g' | sudo tee /mnt/cloud-config.yml > /dev/null",
-			"sudo mv /tmp/vagrant/box /mnt/",
-			"sudo mkdir -p /mnt/bin",
-			"sudo mv /tmp/vagrant/coreos-setup-environment /mnt/bin/",
-			"sudo chmod a+x /mnt/bin/coreos-setup-environment",
-			"sudo umount /mnt"
-		]
-	}],
+  "provisioners": [{
+    "only": ["vagrant-parallels"],
+    "type": "file",
+    "source": "oem/vagrant",
+    "destination": "/tmp"
+  },{
+    "only": ["vagrant-parallels"],
+    "type": "shell",
+    "inline": [
+      "set -e",
+      "sudo coreos-install -d /dev/sda -C {{user `channel`}} -V {{user `version`}} > /dev/null",
+      "sleep 1",
+      "sudo mount /dev/sda6 /mnt",
+      "cat /tmp/vagrant/cloud-config.yml | sed 's/@@OEM_VERSION_ID@@/{{user `oem_vagrant_version`}}/g' | sudo tee /mnt/cloud-config.yml > /dev/null",
+      "sudo mv /tmp/vagrant/box /mnt/",
+      "sudo mkdir -p /mnt/bin",
+      "sudo mv /tmp/vagrant/coreos-setup-environment /mnt/bin/",
+      "sudo chmod a+x /mnt/bin/coreos-setup-environment",
+      "sudo umount /mnt"
+    ]
+  }],
 
-	"post-processors": [
-		[{
-			"only": ["vagrant-parallels"],
-			"type": "vagrant",
-			"output": "builds/{{user `channel`}}/{{user `version`}}/coreos_production_vagrant_{{.Provider}}.box",
-			"vagrantfile_template": "oem/vagrant/box/Vagrantfile",
-			"include": [
-				"oem/vagrant/box/change_host_name.rb",
-				"oem/vagrant/box/configure_networks.rb",
-				"oem/vagrant/box/base_mac.rb"
-			]
-		}, {
-			"only": ["vagrant-parallels"],
-			"type": "vagrant-cloud",
-			"access_token": "{{user `atlas_token`}}",
-			"box_tag": "{{user `atlas_username`}}/coreos-{{user `channel`}}",
-			"version": "{{user `version`}}",
-			"version_description": "**CoreOS [{{user `version`}}](https://coreos.com/releases/#{{user `version`}})** *{{user `channel`}}*"
-		}]
-	]
+  "post-processors": [
+    [{
+      "only": ["vagrant-parallels"],
+      "type": "vagrant",
+      "output": "builds/{{user `channel`}}/{{user `version`}}/coreos_production_vagrant_{{.Provider}}.box",
+      "vagrantfile_template": "oem/vagrant/box/Vagrantfile",
+      "include": [
+        "oem/vagrant/box/change_host_name.rb",
+        "oem/vagrant/box/configure_networks.rb",
+        "oem/vagrant/box/base_mac.rb"
+      ]
+    }, {
+      "only": ["vagrant-parallels"],
+      "type": "vagrant-cloud",
+      "access_token": "{{user `atlas_token`}}",
+      "box_tag": "{{user `atlas_username`}}/coreos-{{user `channel`}}",
+      "version": "{{user `version`}}",
+      "version_description": "**CoreOS [{{user `version`}}](https://coreos.com/releases/#{{user `version`}})** *{{user `channel`}}*"
+    }]
+  ]
 }
